@@ -1,0 +1,32 @@
+
+Best practices
+~~~~~~~~~~~~~~
+
+Convention :
+
+doc['required_foo']
+doc.get('optionnal_foo')
+
+Why dropping validation ?
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+So what are skeleton and optional for ?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ * skeleton generation
+ * documentation
+
+Why ditching dot notation ?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Why remove CustomType ?
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Why getting ride of auto references (`use_autorefs`) ?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Why dropping i18n support ?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Why removing indexes declaration ?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
