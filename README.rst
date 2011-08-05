@@ -12,8 +12,6 @@ validation or dot notation features in this project.
 
 MongoLite is perfect for who wants a thing layer on top of pymongo and don't care about validation stuff.
 
-Most of MongoKit's features can be recreated by using plugins and custom types.
-
 A mongolite is a beautiful stone_
 
 .. _stone : http://www.mindat.org/photos/0656330001207867080.jpg
