@@ -109,7 +109,7 @@ on twitter_.
 Recent Change Log
 =================
 
-v0.1
+v1.0
 ----
 
  * fork from MongoKit, strip all unwanted features

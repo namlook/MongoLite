@@ -38,7 +38,7 @@ import codecs
 
 setup(
     name = 'MongoLite',
-    version = '0.1b', # TODO don't forget to change version
+    version = '1.0beta1', # TODO don't forget to change version
 
     description = 'Python MongoDB light toolkit',
     long_description = codecs.open('README', "r", "utf-8").read(),
