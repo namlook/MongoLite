@@ -11,7 +11,7 @@ from mongolite.database import Database
 from mongolite.connection import CallableMixin, _iterables
 
 class MasterSlaveConnection(PymongoMasterSlaveConnection):
-    """ Master-Slave support for MongoKit """
+    """ Master-Slave support for MongoLite """
 
     def __init__(self, master, slaves=[]):
         """ The MasterSlaveConnection is a wrapper around the
