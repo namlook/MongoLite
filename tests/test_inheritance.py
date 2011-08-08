@@ -127,6 +127,34 @@ class InheritanceTestCase(unittest.TestCase):
 
         assert C() == {"a":{"foo":5}, "c":{"spam":None}}, C()
 
+    def test_default_values_inheritance_with_optional(self):
+        class A(SchemaDocument):
+            skeleton = {
+                "a":{"foo":int}
+            }
+            optional = {
+                "bar": int
+            }
+            default_values = {"a.foo":3, "bar": 42}
+
+        class B(A):
+            skeleton = {
+                "b":{"bar":unicode}
+            }
+
+        assert B() == {"a":{"foo":3}, "b":{"bar":None}, "bar": 42}
+
+        class C(A):
+            skeleton = {
+                "c":{"spam":unicode}
+            }
+            optional = {
+                "bla": unicode,
+            }
+            default_values = {"a.foo":5, "bla": u"foo"}
+
+        assert C() == {"a":{"foo":5}, "c":{"spam":None}, "bar": 42, "bla": u"foo"}, C()
+
     def test_default_values_inheritance_with_function(self):
         from datetime import datetime
         class A(SchemaDocument):

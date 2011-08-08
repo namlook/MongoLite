@@ -34,7 +34,6 @@ log = logging.getLogger(__name__)
 from mongo_exceptions import StructureError, BadKeyError, AuthorizedTypeError
 
 from helpers import DotCollapsedDict
-import pprint
 
 # field wich does not need to be declared into the skeleton
 STRUCTURE_KEYWORDS = []
@@ -151,7 +150,10 @@ class SchemaDocument(dict):
         if gen_skel:
             self.generate_skeleton()
             if self.default_values:
-                self._set_default_fields(self, self.skeleton)
+                if self.skeleton:
+                    self._set_default_fields(self, self.skeleton)
+                if self.optional:
+                    self._set_default_fields(self, self.optional)
 
     def generate_skeleton(self):
         """

@@ -48,6 +48,21 @@ class DescriptorsTestCase(unittest.TestCase):
         assert mydoc["foo"] == 42
         assert mydoc == {'foo':42, 'bla':None}, mydoc
 
+    def test_default_values_with_optional(self):
+        class MyDoc(Document):
+            skeleton = {
+                "foo":int,
+                "bla":unicode,
+            }
+            optional = {
+                "optfield": int,
+            }
+            default_values = {"foo":42, 'optfield':3}
+        mydoc = MyDoc()
+        self.assertEqual(mydoc["foo"], 42)
+        self.assertEqual(mydoc.get('optfield'), 3)
+        self.assertEqual(mydoc, {'foo':42, 'optfield': 3, 'bla':None})
+
     def test_default_values_nested(self):
         class MyDoc(Document):
             skeleton = {
