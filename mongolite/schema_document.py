@@ -87,7 +87,7 @@ class SchemaProperties(type):
                 base._validate_skeleton(attrs['optional'], name, attrs.get('authorized_types'))
                 attrs['_namespaces'].extend(list(base._SchemaDocument__walk_dict(attrs['optional'])))
                 attrs['_collapsed_struct'].update(DotCollapsedDict(attrs['optional'], remove_under_type=True))
-            cls._validate_default_values(attrs)
+            cls._validate_descriptors(attrs)
         if (attrs.get('skeleton') or attrs.get('optional')):
             skel_doc = ""
             for k, v in attrs.get('skeleton', {}).iteritems():
@@ -104,7 +104,7 @@ class SchemaProperties(type):
         return type.__new__(cls, name, bases, attrs)        
 
     @classmethod
-    def _validate_default_values(cls, attrs):
+    def _validate_descriptors(cls, attrs):
         for dv in attrs.get('default_values', {}):
             if not dv in attrs['_namespaces']:
                 raise ValueError("Error in default_values: can't find %s in skeleton" % dv )

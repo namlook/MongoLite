@@ -29,6 +29,11 @@
 __version__ = "1.0beta1"
 
 from bson.dbref import DBRef
+from pymongo import ASCENDING as INDEX_ASCENDING,\
+    DESCENDING as INDEX_DESCENDING,\
+    GEO2D as INDEX_GEO2D,\
+    OFF as INDEX_OFF,\
+    ALL as INDEX_ALL
 from connection import Connection
 from document import Document, ObjectId
 from mongo_exceptions import *

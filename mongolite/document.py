@@ -25,13 +25,14 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from mongolite.schema_document import SchemaDocument, STRUCTURE_KEYWORDS
+from mongolite.schema_document import SchemaProperties, SchemaDocument, STRUCTURE_KEYWORDS
 from mongolite.helpers import DotedDict
 from bson import BSON
 from bson.binary import Binary
 from bson.code import Code
 from bson.dbref import DBRef
 from pymongo.objectid import ObjectId
+import pymongo
 from gridfs import GridFS
 import re
 from copy import deepcopy
@@ -43,9 +44,59 @@ STRUCTURE_KEYWORDS += ['_id', '_ns', '_revision', '_version']
 
 log = logging.getLogger(__name__)
 
-from mongo_exceptions import ConnectionError, OperationFailure
+from mongo_exceptions import ConnectionError, OperationFailure, BadIndexError
+
+class DocumentProperties(SchemaProperties):
+    def __new__(cls, name, bases, attrs):
+        for base in bases:
+            parent = base.__mro__[0]
+            if getattr(parent, 'skeleton', None) or getattr(parent, 'optional', None):
+                if parent.indexes:
+                    if 'indexes' not in attrs:
+                        attrs['indexes'] = []
+                    for index in attrs['indexes']+parent.indexes:
+                        if index not in attrs['indexes']:
+                            attrs['indexes'].append(index)
+        return SchemaProperties.__new__(cls, name, bases, attrs)
+
+    @classmethod
+    def _validate_descriptors(cls, attrs):
+        SchemaProperties._validate_descriptors(attrs)
+        if attrs.get('indexes'):
+            for index in attrs['indexes']:
+                if 'fields' not in index:
+                    raise BadIndexError(
+                          "`fields` key must be specify in indexes")
+                if not index.get('check', True):
+                    continue
+                for key, value in index.iteritems():
+                    if key == "fields":
+                        if isinstance(value, basestring):
+                            if value not in attrs['_namespaces'] and value not in STRUCTURE_KEYWORDS:
+                                raise ValueError(
+                                  "Error in indexes: can't find %s in skeleton or optional" % value )
+                        elif isinstance(value, list):
+                            for val in value:
+                                if isinstance(val, tuple):
+                                    field, direction = val
+                                    if field not in attrs['_namespaces'] and field not in STRUCTURE_KEYWORDS:
+                                        raise ValueError(
+                                          "Error in indexes: can't find %s in skeleton or optional" % field )
+                                    if not direction in [pymongo.DESCENDING, pymongo.ASCENDING, pymongo.OFF, pymongo.ALL, pymongo.GEO2D]:
+                                        raise BadIndexError(
+                                          "index direction must be INDEX_DESCENDING, INDEX_ASCENDING, INDEX_OFF, INDEX_ALL or INDEX_GEO2D. Got %s" % direction)
+                                else:
+                                    raise BadIndexError(
+                                      "fields must be a string or a list of tuples (got %s instead)" % type(value))
+                        else:
+                            raise BadIndexError(
+                              "fields must be a string or a list of tuples (got %s instead)" % type(value))
 
 class Document(SchemaDocument):
+
+    __metaclass__ = DocumentProperties
+
+    indexes = None
 
     use_gridfs = False
     __gridfs_collection__ = None
@@ -170,6 +221,18 @@ class Document(SchemaDocument):
         delete the document from the collection from his _id.
         """
         self.collection.remove({'_id':self['_id']})
+
+    def generate_indexes(self, collection=None):
+        """
+        Ensures that all indexes described in self.indexes exist on the collection.
+        """
+        if self.indexes:
+            if collection is None:
+                collection = self.collection
+            for index in self.indexes:
+                fields = index.pop('fields')
+                index.pop('check', None)
+                collection.ensure_index(fields, **index)
 
     #
     # End of public API
