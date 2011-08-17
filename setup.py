@@ -41,7 +41,7 @@ setup(
     version = '1.0beta1', # TODO don't forget to change version
 
     description = 'Python MongoDB light toolkit',
-    long_description = codecs.open('README', "r", "utf-8").read(),
+    long_description = codecs.open('README.rst', "r", "utf-8").read(),
     author = 'Namlook',
     license = 'New BSD License',
     url = 'http://namlook.github.com/mongolite/',
@@ -63,7 +63,7 @@ setup(
     zip_safe = False,
 
     install_requires = [
-        'pymongo>=1.11',
+        'pymongo>=2.01',
     ]
 
 )
