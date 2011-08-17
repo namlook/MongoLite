@@ -201,6 +201,35 @@ class ApiTestCase(unittest.TestCase):
         raw_mydoc = self.col.find_one()
         assert one_doc == raw_mydoc
 
+    def test_find_and_modify(self):
+        @self.connection.register
+        class DocA(Document):
+            __database__ = 'test'
+            __collection__ = 'doca'
+            structure = {'title': unicode, 'rank': int}
+
+        for i in range(10):
+            self.connection.DocA({'title': unicode(i), 'rank': i}).save()
+
+        doc = self.connection.DocA.find_and_modify({'rank':3}, {'$set':{'title': u'coucou'}})
+        new_doc = self.connection.DocA.find_one({'rank':3})
+        self.assertEqual(doc['title'], '3')
+        self.assertEqual(new_doc['title'], 'coucou')
+        self.assertEqual(isinstance(doc, DocA), True)
+
+        @self.connection.register
+        class DocA(Document):
+            structure = {'title': unicode, 'rank': int}
+
+        for i in range(10):
+            self.connection.test.doca2.save({'title': unicode(i), 'rank': i})
+
+        doc = self.connection.test.doca2.DocA.find_and_modify({'rank':3}, {'$set':{'title': u'coucou'}})
+        new_doc = self.connection.test.doca2.DocA.find_one({'rank':3})
+        self.assertEqual(doc['title'], '3')
+        self.assertEqual(new_doc['title'], 'coucou')
+        self.assertEqual(isinstance(doc, DocA), True)
+
     def test_find_random(self):
         class MyDoc(Document):
             skeleton = {

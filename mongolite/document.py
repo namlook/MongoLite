@@ -169,6 +169,12 @@ class Document(SchemaDocument):
             num = random.randint(0, max-1)
             return self.find().skip(num).next()
 
+    def find_and_modify(self, *args, **kwargs):
+        """
+        Update and return an object.
+        """
+        return self.collection.find_and_modify(wrap=self._obj_class, *args, **kwargs)
+
     def get_from_id(self, id):
         """
         return the document which has the id
