@@ -38,7 +38,7 @@ import codecs
 
 setup(
     name = 'MongoLite',
-    version = '1.0beta1', # TODO don't forget to change version
+    version = '1.0', # TODO don't forget to change version
 
     description = 'Python MongoDB light toolkit',
     long_description = codecs.open('README.rst', "r", "utf-8").read(),
@@ -47,8 +47,8 @@ setup(
     url = 'http://namlook.github.com/mongolite/',
 
     classifiers = [
-#        'Development Status :: 5 - Production/Stable',
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
+#        'Development Status :: 4 - Beta',
         'Environment :: Other Environment',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: Apache Software License',
