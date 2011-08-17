@@ -63,7 +63,7 @@ setup(
     zip_safe = False,
 
     install_requires = [
-        'pymongo>=2.01',
+        'pymongo>=2.0.1',
     ]
 
 )
