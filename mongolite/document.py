@@ -96,6 +96,8 @@ class Document(SchemaDocument):
 
     __metaclass__ = DocumentProperties
 
+    type_field = '_type'
+
     indexes = None
 
     use_gridfs = False
@@ -113,6 +115,8 @@ class Document(SchemaDocument):
     def __init__(self, doc=None, gen_skel=True, collection=None):
         self._authorized_types = self.authorized_types[:]
         super(Document, self).__init__(doc=doc, gen_skel=gen_skel, gen_auth_types=False)
+        if self.type_field in self:
+            self[self.type_field] = self.__class__.__name__
         # collection
         self.collection = collection
         if collection:
