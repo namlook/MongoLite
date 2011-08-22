@@ -10,7 +10,7 @@ validation or dot notation features in this project.
 
 .. _MongoKit : http://namlook.github.com/mongokit/
 
-MongoLite is perfect for who wants a thing layer on top of pymongo and don't care about validation stuff.
+MongoLite is perfect for who wants a thin layer on top of pymongo and don't care about validation stuff.
 
 A mongolite is a beautiful stone_
 
