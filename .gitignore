@@ -3,3 +3,4 @@ syntax: glob
 .*.swp
 .coverage
 MongoLite.egg-info/
+dist
