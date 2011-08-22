@@ -27,6 +27,8 @@
 
 from mongolite.schema_document import SchemaProperties, SchemaDocument, STRUCTURE_KEYWORDS
 from mongolite.helpers import DotedDict
+from cursor import Cursor
+from helpers import DotCollapsedDict, DotExpandedDict
 from bson import BSON
 from bson.binary import Binary
 from bson.code import Code
@@ -97,6 +99,8 @@ class Document(SchemaDocument):
     __metaclass__ = DocumentProperties
 
     type_field = '_type'
+
+    serialize_mapping = {}
 
     indexes = None
 
@@ -243,6 +247,23 @@ class Document(SchemaDocument):
                 fields = index.pop('fields')
                 index.pop('check', None)
                 collection.ensure_index(fields, **index)
+
+    def serialize(self):
+        doc = {}
+        for k, v in DotCollapsedDict(self).iteritems():
+            if "." in k:
+                if self.serialize_mapping.get(k):
+                    v = getattr(self, self.serialize_mapping[k])
+                else:
+                    default_property_key = '__'.join(k.split('.'))
+                    if hasattr(self, default_property_key):
+                        v = getattr(self, default_property_key)
+            elif hasattr(self, k):
+                v = getattr(self, k)
+            if isinstance(v, Cursor):
+                v = list(v)
+            doc[k] = v
+        return DotExpandedDict(doc)
 
     #
     # End of public API

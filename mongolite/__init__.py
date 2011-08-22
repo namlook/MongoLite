@@ -37,3 +37,4 @@ from pymongo import ASCENDING as INDEX_ASCENDING,\
 from connection import Connection
 from document import Document, ObjectId
 from mongo_exceptions import *
+from bson import json_util

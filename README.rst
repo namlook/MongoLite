@@ -1,6 +1,6 @@
-========
+=========
 MongoLite
-========
+=========
 
 MongoLite is a fork of MongoKit_ by the same author. It aims to come back to simplicity by stripping a lot of features and replacing them with best practices.
 
