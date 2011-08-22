@@ -28,6 +28,7 @@
 from pymongo.database import Database as PymongoDatabase
 from bson.dbref import DBRef
 from mongolite.document import Document
+from mongolite.mongo_exceptions import StructureError
 from collection import Collection
 
 class Database(PymongoDatabase):
@@ -74,6 +75,8 @@ class Database(PymongoDatabase):
         son = super(Database, self)._fix_outgoing(son, collection)
         if wrap is not None:
             if wrap.type_field in son:
+                if son[wrap.type_field] is None:
+                    raise StructureError("You added `_type` field in the %s's structure but `_type` is None in your database and it shouldn't be. You have to update your documents to fill the `_type` field before using the inherited queries feature" % wrap.__name__)
                 return getattr(collection, son[wrap.type_field])(son)
             return wrap(son, collection=collection)
         return son

@@ -28,6 +28,7 @@
 import unittest
 
 from mongolite import Document, Connection
+from mongolite.mongo_exceptions import StructureError
 
 class InheritedQueriesTestCase(unittest.TestCase):
     def setUp(self):
@@ -223,5 +224,61 @@ class InheritedQueriesTestCase(unittest.TestCase):
         self.assertTrue(isinstance(self.col.A.find({'_id':doc_b['_id']}).next(), A))
         self.assertTrue(isinstance(self.col.A.find_one({'_id':doc_b['_id']}), B))
         self.assertTrue(isinstance(self.col.A.find({'_id':doc_b['_id']}).next(), B))
+
+    def test_use_inherited_queries_without_updated_data(self):
+        @self.connection.register
+        class A(Document):
+            __database__ = 'test'
+            __collection__ = 'mongolite'
+            skeleton = {
+                '_type': unicode,
+                'a':{
+                    'foo': int,
+                    'bar': unicode,
+                }
+            }
+
+        @self.connection.register
+        class B(A):
+            skeleton = {
+                'b': {
+                    'eggs': float,
+                }
+            }
+
+        doc_a = self.connection.A()
+        doc_a["_type"] = None
+        doc_a['a']['foo'] = 3
+        doc_a['a']['bar'] = u'Hello World'
+        doc_a.save()
+
+        doc_b = self.connection.B()
+        doc_a["_type"] = None
+        doc_b['a']['foo'] = 42
+        doc_b['a']['bar'] = u'bye bye'
+        doc_b['b']['eggs'] = 3.14
+        doc_b.save()
+
+        @self.connection.register
+        class A(Document):
+            __database__ = 'test'
+            __collection__ = 'mongolite'
+            skeleton = {
+                '_type': unicode,
+                'a':{
+                    'foo': int,
+                    'bar': unicode,
+                }
+            }
+
+        @self.connection.register
+        class B(A):
+            skeleton = {
+                'b': {
+                    'eggs': float,
+                }
+            }
+
+        self.assertRaises(StructureError, self.connection.A.find_one)
 
 
