@@ -32,13 +32,11 @@ except ImportError:
     ez_setup.use_setuptools()
     from setuptools import setup, find_packages
 
-import os
-import sys
 import codecs
 
 setup(
     name = 'MongoLite',
-    version = '1.0', # TODO don't forget to change version
+    version = '1.1', # TODO don't forget to change version
 
     description = 'Python MongoDB light toolkit',
     long_description = codecs.open('README.rst', "r", "utf-8").read(),
