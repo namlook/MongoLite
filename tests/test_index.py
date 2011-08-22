@@ -50,6 +50,41 @@ class IndexTestCase(unittest.TestCase):
             optional = {
                 'standard':unicode,
             }
+
+            indexes = [
+                {
+                    'fields':[('standard',1),('other.deep',1)],
+                    'unique':True,
+                },
+            ]
+        self.col.Movie.generate_indexes()
+        movie = self.col.Movie()
+        movie['standard'] = u'test'
+        movie['other']['deep'] = u'testdeep'
+        movie['notindexed'] = u'notthere'
+        movie.save()
+
+        db = self.connection.test
+        item = db['system.indexes'].find_one({'ns':'test.mongolite', 'name': 'standard_1_other.deep_1', 'unique':True})
+        assert item is not None, 'No Index Found'
+
+        movie = self.col.Movie()
+        movie['standard'] = u'test'
+        movie['other']['deep'] = u'testdeep'
+        self.assertRaises(OperationFailure, movie.save)
+
+    def test_index_basic_dynamic_collection(self):
+        @self.connection.register
+        class Movie(Document):
+            skeleton = {
+                'other':{
+                    'deep':unicode,
+                },
+                'notindexed':unicode,
+            }
+            optional = {
+                'standard':unicode,
+            }
             
             indexes = [
                 {
@@ -72,6 +107,12 @@ class IndexTestCase(unittest.TestCase):
         movie['standard'] = u'test'
         movie['other']['deep'] = u'testdeep'
         self.assertRaises(OperationFailure, movie.save)
+
+        self.connection.test.othercol.Movie.generate_indexes()
+        db = self.connection.test
+        item = db['system.indexes'].find_one({'ns':'test.othercol', 'name': 'standard_1_other.deep_1', 'unique':True})
+        assert item is not None, 'No Index Found'
+
 
     def test_index_single_without_generation(self):
         class Movie(Document):
@@ -108,7 +149,7 @@ class IndexTestCase(unittest.TestCase):
                 },
             ]
         self.connection.register([Movie])
-        self.col.Movie.generate_indexes(self.col.Movie.collection)
+        self.col.Movie.generate_indexes()
         movie = self.col.Movie()
         movie['standard'] = u'test'
         movie.save()
@@ -178,7 +219,7 @@ class IndexTestCase(unittest.TestCase):
                 },
             ]
         self.connection.register([Movie])
-        self.col.Movie.generate_indexes(self.col.Movie.collection)
+        self.col.Movie.generate_indexes()
         movie = self.col.Movie()
         movie['standard'] = u'test'
         movie['other']['deep'] = u'foo'
@@ -221,7 +262,7 @@ class IndexTestCase(unittest.TestCase):
                 },
             ]
         self.connection.register([Movie])
-        self.col.Movie.generate_indexes(self.col.Movie.collection)
+        self.col.Movie.generate_indexes()
         movie = self.col.Movie()
         movie['standard'] = u'test'
         movie.save()
@@ -255,7 +296,7 @@ class IndexTestCase(unittest.TestCase):
                 },
             ]
         self.connection.register([Movie])
-        self.col.Movie.generate_indexes(self.col.Movie.collection)
+        self.col.Movie.generate_indexes()
         movie = self.col.Movie()
         movie['standard'] = u'test'
         movie.save()
@@ -437,7 +478,7 @@ class IndexTestCase(unittest.TestCase):
         # If indexes are still broken validation will choke on the ttl
             ]
         self.connection.register([Movie])
-        self.col.Movie.generate_indexes(self.col)
+        self.col.Movie.generate_indexes()
         movie = self.col.Movie()
         movie['standard'] = u'test'
         movie.save()
@@ -467,7 +508,7 @@ class IndexTestCase(unittest.TestCase):
             
         self.connection.register([DocA, DocB])
         self.assertEqual(self.col.DocB.indexes, [{'fields': 'standard', 'unique':True}])
-        self.col.DocB.generate_indexes(self.col)
+        self.col.DocB.generate_indexes()
         docb = self.col.DocB()
         docb['standard'] = u'test'
         docb['docb'] = u'foo'
@@ -503,7 +544,7 @@ class IndexTestCase(unittest.TestCase):
             ]
         self.connection.register([DocA, DocB])
         self.assertEqual(self.col.DocB.indexes, [{'fields': 'docb', 'unique': True}, {'fields': 'standard', 'unique': True}])
-        self.col.DocB.generate_indexes(self.col.DocB.collection)
+        self.col.DocB.generate_indexes()
 
             
         docb = self.col.DocB()
@@ -563,6 +604,7 @@ class IndexTestCase(unittest.TestCase):
         self.col.MyDoc.generate_indexes()
         results = [i['_id'] for i in self.col.MyDoc.find().sort([('mydoc.creation_date',-1),('_id',1)])]
         self.assertEqual(results, ['ccc', 'aa', 'aaa', 'bbb'])
+        self.col.MyDoc.generate_indexes()
 
     def test_index_pymongo(self):
         import datetime
@@ -643,7 +685,7 @@ class IndexTestCase(unittest.TestCase):
                 {'fields': [('foo', 1), ('bar', -1)]},
             ]
         self.connection.register([MyDoc])
-        self.col.MyDoc.generate_indexes(self.col)
+        self.col.MyDoc.generate_indexes()
         for i in range(10):
            doc = self.col.MyDoc()
            doc['foo'] = unicode(i)
@@ -661,7 +703,7 @@ class IndexTestCase(unittest.TestCase):
             indexes = [
                     {'fields': 'foo.title', 'check':False},
             ]
-        self.col.MyDoc.generate_indexes(self.col)
+        self.col.MyDoc.generate_indexes()
         for i in range(10):
            doc = self.col.MyDoc()
            doc['foo']['title'] = unicode(i)
@@ -679,7 +721,7 @@ class IndexTestCase(unittest.TestCase):
             indexes = [
                     {'fields': [('foo', 1)], 'check':True},
             ]
-        self.col.MyDoc.generate_indexes(self.col)
+        self.col.MyDoc.generate_indexes()
         for i in range(10):
            doc = self.col.MyDoc()
            doc['foo'] = unicode(i)

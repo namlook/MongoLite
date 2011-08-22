@@ -236,17 +236,17 @@ class Document(SchemaDocument):
         """
         self.collection.remove({'_id':self['_id']})
 
-    def generate_indexes(self, collection=None):
+    def generate_indexes(self):
         """
         Ensures that all indexes described in self.indexes exist on the collection.
         """
         if self.indexes:
-            if collection is None:
-                collection = self.collection
             for index in self.indexes:
-                fields = index.pop('fields')
-                index.pop('check', None)
-                collection.ensure_index(fields, **index)
+                kwargs = {}
+                kwargs.update(index)
+                fields = kwargs.pop('fields')
+                kwargs.pop('check', None)
+                self.collection.ensure_index(fields, **kwargs)
 
     def serialize(self):
         doc = {}
