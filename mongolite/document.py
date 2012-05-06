@@ -33,7 +33,7 @@ from bson import BSON
 from bson.binary import Binary
 from bson.code import Code
 from bson.dbref import DBRef
-from pymongo.objectid import ObjectId
+from bson.objectid import ObjectId
 import pymongo
 from gridfs import GridFS
 import re
@@ -218,13 +218,6 @@ class Document(SchemaDocument):
     def save(self, *args, **kwargs):
         """
         save the document into the db.
-
-        if uuid is True, a uuid4 will be automatiquely generated
-        else, the pymongo.ObjectId will be used.
-
-        If validate is True, the `validate` method will be called before
-        saving. Not that the `validate` method will be called *before* the
-        uuid is generated.
 
         `save()` follow the pymongo.collection.save arguments
         """
