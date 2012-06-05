@@ -1,6 +1,24 @@
 Change Log
 ==========
 
+v1.3
+-----
+
+ * change pymongo.objectid -> bson.objectid as this alias was deleted in pymongo 2.2
+ * add exception in case of bad behavior with inherited queries
+
+v1.2
+-----
+
+ * fix generate_indexes() and slightly api change
+
+v1.1
+-----
+
+ * add inherited queries support
+ * add serialize support
+ * fix pymongo's version
+
 v1.0
 ------
 
