@@ -1,6 +1,13 @@
 Change Log
 ==========
 
+v1.4
+----
+
+ * support pymongo 2.3
+ * added fix for unconditional access to __wrap on cursors
+ * add __getitem__ suport on Cursor
+
 v1.3
 -----
 

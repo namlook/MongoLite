@@ -39,7 +39,7 @@ Features
 
 .. Go to the full documentation_ .
 
-.. _documentation : http://namlook.github.com/mongolite/
+.. _documentation : http://github.com/namlook/MongoLite/wiki
 
 A quick example
 ===============

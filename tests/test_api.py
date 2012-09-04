@@ -792,3 +792,12 @@ class ApiTestCase(unittest.TestCase):
         except AttributeError:
             assertion = True
         self.assertTrue(assertion)
+
+    def test_unwrapped_cursor(self):
+        self.assertEqual(self.col.count(), 0)
+        doc_id = self.col.save({}, safe=True)
+        self.assertEqual(self.col.count(), 1)
+        try:
+            self.col.find(_id=doc_id)[0]
+        except TypeError:
+            self.fail("Cursor.__getitem__ raised TypeError unexpectedly!")

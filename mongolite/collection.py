@@ -48,13 +48,13 @@ class Collection(PymongoCollection):
             return self._collections[newkey]
 
     def __call__(self, *args, **kwargs):
-        if "." not in self.__name:
+        if "." not in self._Collection__name:
             raise TypeError("'Collection' object is not callable. If you "
                             "meant to call the '%s' method on a 'Database' "
                             "object it is failing because no such method "
                             "exists." %
-                            self.__name)
-        name = self.__name.split(".")[-1]
+                            self._Collection__name)
+        name = self._Collection__name.split(".")[-1]
         raise TypeError("'Collection' object is not callable. "
           "If you meant to call the '%s' method on a 'Collection' "
           "object it is failing because no such method exists.\n"
