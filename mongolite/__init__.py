@@ -34,7 +34,7 @@ from pymongo import ASCENDING as INDEX_ASCENDING,\
     GEO2D as INDEX_GEO2D,\
     OFF as INDEX_OFF,\
     ALL as INDEX_ALL
-from connection import Connection
+from connection import Connection, MongoClient
 from document import Document, ObjectId
 from mongo_exceptions import *
 from bson import json_util

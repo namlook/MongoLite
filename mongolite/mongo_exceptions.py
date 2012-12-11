@@ -35,7 +35,10 @@ class DefaultFieldTypeError(Exception):pass
 
 # Mongo Document Exceptions
 from bson import InvalidDocument
-from pymongo.connection import OperationFailure
+try:
+    from pymongo.connection import OperationFailure
+except ImportError:
+    from pymongo.errors import OperationFailure
 class ConnectionError(Exception):pass
 class BadIndexError(Exception):pass
 #class MongoAuthException(Exception):pass

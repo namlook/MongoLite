@@ -25,7 +25,10 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from pymongo import Connection as PymongoConnection
+try:
+    from pymongo import Connection as PymongoConnection
+except ImportError:
+    from pymongo import MongoClient as PymongoConnection
 from database import Database
 
 class CallableMixin(object):
@@ -92,4 +95,4 @@ class Connection(PymongoConnection):
                 self._databases[key] = Database(self, key)
             return self._databases[key]
 
-
+MongoClient = Connection
