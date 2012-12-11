@@ -109,6 +109,36 @@ on twitter_.
 Recent Change Log
 =================
 
+v1.5
+----
+
+ * support pymongo 2.4
+
+v1.4
+----
+
+ * support pymongo 2.3
+ * added fix for unconditional access to __wrap on cursors
+ * add __getitem__ suport on Cursor
+
+v1.3
+----
+
+ * change pymongo.objectid -> bson.objectid as this alias was deleted in pymongo 2.2
+ * add exception in case of bad behavior with inherited queries
+
+v1.2
+----
+
+ * fix generate_indexes() and slightly api change
+
+v1.1
+----
+
+ * add inherited queries support
+ * add serialize support
+ * fix pymongo's version
+
 v1.0
 ----
 
