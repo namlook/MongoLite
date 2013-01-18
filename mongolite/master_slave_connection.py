@@ -5,7 +5,11 @@ Andreas Jung, info@zopyx.com
 """
 
 from pymongo.master_slave_connection import MasterSlaveConnection as PymongoMasterSlaveConnection
-from pymongo import Connection as PyMongoConnection
+
+try:
+    from pymongo import MongoClient as PymongoConnection
+except ImportError:
+    from pymongo import Connection as PymongoConnection
 
 from mongolite.database import Database
 from mongolite.connection import CallableMixin, _iterables
